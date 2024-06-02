@@ -1,10 +1,10 @@
-name: PR Check
+name: Validate Icons
 
 on:
   pull_request:
 
 jobs:
-  pr-check:
+  dimension_check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,14 +19,15 @@ jobs:
         env:
           ALL_CHANGED_FILES: ${{ steps.changed-png-files.outputs.all_changed_files }}
         run: |
-          echo "##PNG Dimensions Check"
+          echo "##PNG Dimensions Check" >> $GITHUB_STEP_SUMMARY
           for file in ${ALL_CHANGED_FILES}; do
             echo "$file was changed"
             image_size=$(identify -format "%wx%h" $file)
             if [[ $image_size != "512x512" ]]; then
-              echo "::error file=$file::❌$file is not 512x512, it's $image_size" >> $GITHUB_STEP_SUMMARY
+              echo "::error file=$file::❌ - $file is not 512x512, it's $image_size" 
+              echo "❌ - $file is not 512x512, it's $image_size" >> $GITHUB_STEP_SUMMARY
             else
-              echo "✅$file dimensions are valid" >> $GITHUB_STEP_SUMMARY
+              echo "✅ - $file dimensions are valid" >> $GITHUB_STEP_SUMMARY
             fi
           done      
           
