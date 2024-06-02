@@ -1,4 +1,4 @@
-name: Validate Icons
+name: 🔍 Validate Icons
 
 on:
   pull_request:
