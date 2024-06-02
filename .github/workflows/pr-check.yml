@@ -7,28 +7,18 @@ jobs:
   pr-check:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Print diffs
-        run: git diff --name-only main -- ./svg ./png
-      - name: Print file diffs in svg and png folders
+      - name: Get all changed png files
+        id: changed-png-files
+        uses: tj-actions/changed-files@v44
+        with:
+          files: |
+             png/*.png
+      - name: List all changed files png files
+        if: steps.changed-png-files.outputs.any_changed == 'true'
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-png-files.outputs.all_changed_files }}
         run: |
-          changed_files=$(git diff --name-only main -- ./svg ./png)
-          for file in $changed_files
-          do
-            file_type=$(file --mime-type -b $file)
-            if [[ $file == *.svg && $file_type != "image/svg+xml" ]]; then
-              echo "::warning:: $file is not a valid $file_type file"
-            elif [[ $file == *.png ]]; then
-              if [[ $file_type != "image/png" ]]; then
-                echo "::warning:: $file is not a valid $file_type file"
-              fi
-              image_size=$(identify -format "%wx%h" $file)
-              if [[ $image_size != "512x512" ]]; then
-                echo "::warning:: $file is not 512x512, it's $image_size"
-              fi
-            fi
-          done
-        shell: bash
-              
-        
+          for file in ${ALL_CHANGED_FILES}; do
+            echo "$file was changed"
+          done      
+          
