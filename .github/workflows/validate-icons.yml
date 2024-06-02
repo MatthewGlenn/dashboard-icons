@@ -20,7 +20,6 @@ jobs:
         env:
           ALL_CHANGED_FILES: ${{ steps.changed-png-files.outputs.all_changed_files }}
         run: |
-          failure = 0
           echo "## PNG Dimensions Check" >> $GITHUB_STEP_SUMMARY
           for file in ${ALL_CHANGED_FILES}; do
             echo "$file was changed"
@@ -28,10 +27,8 @@ jobs:
             if [[ $image_size != "512x512" ]]; then
               echo "::error::$file is not 512x512, it's $image_size" 
               echo "❌ - \`$file\` is not \`512x512\`, it's \`$image_size\`" >> $GITHUB_STEP_SUMMARY
-              failure = 1
+              exit 1
             else
               echo "✅ - \`$file\` dimensions are valid" >> $GITHUB_STEP_SUMMARY
             fi
           done
-          exit $failure
-        
