@@ -7,14 +7,13 @@ jobs:
   pr-check:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Get all changed png files
         id: changed-png-files
         uses: tj-actions/changed-files@v44
         with:
           files: |
              png/*.png
-      - name: Setup ImageMagick
-        run: sudo apt-get install imagemagick -y
       - name: List all changed files png files
         if: steps.changed-png-files.outputs.any_changed == 'true'
         env:
