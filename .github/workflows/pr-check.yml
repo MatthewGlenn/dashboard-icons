@@ -9,8 +9,27 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Setup ImageMagick
+        run: sudo apt-get install imagemagick -y
       - name: Print file diffs in svg and png folders
         run: |
-          git diff --name-only origin/main -- ./svg ./png
-          
+          changed_files=$(git diff --name-only origin/main -- ./svg ./png)
+          for file in $changed_files
+          do
+            file_type=$(file --mime-type -b $file)
+            if [[ $file == *.svg && $file_type != "image/svg+xml" ]]; then
+              echo "Error: $file is not a valid $file_type file"
+              exit 1
+            elif [[ $file == *.png ]]; then
+              if [[ $file_type != "image/png" ]]; then
+                echo "Error: $file is not a valid $file_type file"
+                exit 1
+              fi
+              image_size=$(identify -format "%wx%h" $file)
+              if [[ $image_size != "512x512" ]]; then
+                echo "Error: $file is not 512x512, it's $image_size"
+                exit 1
+              fi
+            fi
+          done    
         
