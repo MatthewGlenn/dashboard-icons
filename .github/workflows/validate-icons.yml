@@ -6,6 +6,8 @@ on:
 jobs:
   dimension_check:
     runs-on: ubuntu-latest
+    env:
+      ValidIcons: true
     steps:
       - uses: actions/checkout@v4
       - name: Get all changed png files
@@ -16,7 +18,6 @@ jobs:
              png/*.png
       - name: Check dimensions for PNG files
         if: steps.changed-png-files.outputs.any_changed == 'true'
-        continue-on-error: true
         env:
           ALL_CHANGED_FILES: ${{ steps.changed-png-files.outputs.all_changed_files }}
         run: |
@@ -27,8 +28,11 @@ jobs:
             if [[ $image_size != "512x512" ]]; then
               echo "::error::$file is not 512x512, it's $image_size" 
               echo "❌ - \`$file\` is not \`512x512\`, it's \`$image_size\`" >> $GITHUB_STEP_SUMMARY
-              exit 1
+              echo "ValidIcons=false" >> $GITHUB_ENV
             else
               echo "✅ - \`$file\` dimensions are valid" >> $GITHUB_STEP_SUMMARY
             fi
           done
+      - name: Check for errors
+        if: env.ValidIcons == 'false'
+        run: exit 1
