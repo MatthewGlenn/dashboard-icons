@@ -8,9 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Setup ImageMagick
-        run: sudo apt-get install imagemagick -y
+        uses: actions/checkout@v4
+      - name: Print diffs
+        run: git diff --name-only origin/main -- ./svg ./png
       - name: Print file diffs in svg and png folders
         run: |
           changed_files=$(git diff --name-only origin/main -- ./svg ./png)
