@@ -28,5 +28,7 @@ jobs:
                 echo "::warning:: $file is not 512x512, it's $image_size"
               fi
             fi
-          done    
+          done
+        shell: bash
+              
         
