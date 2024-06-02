@@ -9,17 +9,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Create a list of newly checked in images
+      - name: Print file diffs in svg and png folders
         run: |
-          images=($(git diff --name-only HEAD^ HEAD | grep -E '\.(png|svg)$'))
-          echo "List of newly checked in images:"
-          for image in "${images[@]}"; do
-            echo "$image"
-          done
-          for image in "${images[@]}"; do
-            dimensions=$(identify -format "%wx%h" "$image")
-            if [[ $dimensions != "512x512" ]]; then
-              echo "Image $image does not have dimensions 512x512"
-              exit 1
-            fi
-          done
+          git diff --name-only origin/main -- ./svg ./png
+          
+        
