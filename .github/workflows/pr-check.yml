@@ -13,6 +13,8 @@ jobs:
         with:
           files: |
              png/*.png
+      - name: Setup ImageMagick
+        run: sudo apt-get install imagemagick -y
       - name: List all changed files png files
         if: steps.changed-png-files.outputs.any_changed == 'true'
         env:
