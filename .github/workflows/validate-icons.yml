@@ -25,9 +25,9 @@ jobs:
             image_size=$(identify -format "%wx%h" $file)
             if [[ $image_size != "512x512" ]]; then
               echo "::error::$file is not 512x512, it's $image_size" 
-              echo "❌ - `$file` is not `512x512`, it's `$image_size`" >> $GITHUB_STEP_SUMMARY
+              echo "❌ - \`$file\` is not \`512x512\`, it's \`$image_size\`" >> $GITHUB_STEP_SUMMARY
             else
-              echo "✅ - `$file` dimensions are valid" >> $GITHUB_STEP_SUMMARY
+              echo "✅ - \`$file\` dimensions are valid" >> $GITHUB_STEP_SUMMARY
             fi
           done      
           
