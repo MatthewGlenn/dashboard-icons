@@ -10,10 +10,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Print diffs
-        run: git diff --name-only origin/main -- ./svg ./png
+        run: git diff --name-only main -- ./svg ./png
       - name: Print file diffs in svg and png folders
         run: |
-          changed_files=$(git diff --name-only origin/main -- ./svg ./png)
+          changed_files=$(git diff --name-only main -- ./svg ./png)
           for file in $changed_files
           do
             file_type=$(file --mime-type -b $file)
